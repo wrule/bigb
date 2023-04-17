@@ -3,6 +3,13 @@ import express from 'express';
 import { Server } from 'socket.io';
 import { io as ioClient } from 'socket.io-client';
 
+export
+class Bigb {
+  public constructor(portRange: [number, number]) { }
+
+  
+}
+
 const app = express();
 const server = http.createServer(app);
 const ioServer = new Server(server, { cors: { origin: '*' } });
