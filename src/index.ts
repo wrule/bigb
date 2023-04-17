@@ -2,6 +2,7 @@ import http from 'http';
 import express, { Express } from 'express';
 import { Server } from 'socket.io';
 import { io as ioClient } from 'socket.io-client';
+import axios from 'axios';
 
 export
 class BigbServer {
@@ -29,7 +30,23 @@ class BigbServer {
 
 export
 class Bigb {
-  public constructor(portRange: [number, number]) { }
+  public constructor(
+    private readonly hostname: string,
+    private readonly portRange: [number, number],
+    private readonly welcome = 'bigbServer',
+  ) { }
+
+  public async fetchWelcome(port: number) {
+    try {
+      const res = await axios.get(`http://${this.hostname}:${port}/welcome`, { timeout: 10000 });
+      if (res.data === this.welcome) return this.welcome;
+    } catch (e) { }
+    return '';
+  }
+
+  public fetchAllWelcome() {
+    return Promise.all(this.portRange.map((port) => this.fetchWelcome(port)));
+  }
 
   public createServer() {
 
@@ -40,5 +57,13 @@ class Bigb {
   }
 }
 
-const b = new BigbServer(19999);
-b.Start();
+
+async function main() {
+  const b = new BigbServer(19999);
+  b.Start();
+  const a = new Bigb('localhost', [20000, 20010]);
+  const c = await a.
+  console.log(c);
+}
+
+main();
